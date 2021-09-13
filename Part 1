@@ -1,7 +1,5 @@
 #Part 1
 def identify_rules(input_number):
-    input_options = [['1','1','1'],['1','1','0'],['1','0','1'],['1','0','0'],['0','1','1'],['0','1','0'],['0','0','1'],['0','0','0']]
-    output_options = ['1','0','1','0','1','1','1','1']
     input_binary = bin(input_number)
     input_binary_list = []
     for i in range(len(input_binary)):
