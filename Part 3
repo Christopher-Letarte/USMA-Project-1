@@ -1,0 +1,10 @@
+#part 3
+def initial_condition(iterations):
+    output_list = [[]]
+    if type(iterations) != int:
+        return 'Error, please enter an integer number of iterations'
+    else:
+        for i in range(iterations):
+            output_list.append([])
+    return output_list
+initial_condition(3)    
