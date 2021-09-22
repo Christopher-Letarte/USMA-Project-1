@@ -68,9 +68,9 @@ def one_dimension(iterations, rules_library):
         temporary_row = []
         for j in range(iterations-i):
             temporary_row.append(0)
-        for j in range(len(impulse)):
-            temporary_row.append(impulse[j])
-        for k in range(iterations-i):
+        for k in range(len(impulse)):
+            temporary_row.append(impulse[k])
+        for l in range(iterations-i):
             temporary_row.append(0)
         framework_with_impulse[i] = temporary_row
         impulse = next_state(impulse,rules_library)
@@ -98,10 +98,10 @@ visual_one_dimension(iterations = 50, rules_library = identify_rules(175))
 
 # %%
 #Part 6
-
-
-
-
+visual_one_dimension(iterations = 150, rules_library = identify_rules(30))
+visual_one_dimension(iterations = 150, rules_library = identify_rules(60))
+visual_one_dimension(iterations = 150, rules_library = identify_rules(150))
+visual_one_dimension(iterations = 150, rules_library = identify_rules(225))
 # %%
 '''
 Problem 2
@@ -124,30 +124,130 @@ for i in range(15):
         rect = Rectangle(Point(i,j),Point(i+1,j+1))
         rect.draw(win)
 p = win.getMouse()
-if p.getX() < 400:
-    win.close()
 
 
 # %%
 #Part 8
+#TOGGLE AND OTHER FUNCTION HERE
+#Toggle Function
+def toggle(grid_state, row, column):
+    if grid_state[row][column] == 1:
+        grid_state[row][column] = 0
+    else:
+        grid_state[row][column] = 1
+    return grid_state
+#Draw_cell Function here
+def draw_matrix(grid_state,iteration):
+    win = GraphWin(f"{iteration} iterations",700,700)
+    win.setCoords(0,0,15,15)
+    #draw the horizontal lines
+    for i in range(len(grid_state)):
+        for j in range(len(grid_state[i])):
+            rect = Rectangle(Point(i,j),Point(i+1,j+1))
+            if grid_state[i][j] == 1:
+                rect.setFill('blue')
+            rect.draw(win)
+    p = win.getMouse()
+    if p.getX() < 400:
+        win.close()
+#%%
+#Part 9
+from graphics import *
+def initial_conditions():
+    import math
+    row = []
+    grid_state = []
+    for i in range(15):
+        row.append(0)
+    for i in range(15):
+        grid_state.append(row.copy())
+    initial_condition = True
+    while initial_condition == True:
+        win = GraphWin("Initial Condition",700,700)
+        win.setCoords(0,0,15,15)
+        #draw the horizontal lines
+        for i in range(len(grid_state)):
+            for j in range(len(grid_state[i])):
+                rect = Rectangle(Point(i,j),Point(i+1,j+1))
+                if grid_state[i][j] == 1:
+                    rect.setFill('blue')
+                if i == 0 and j == 14:
+                    rect.setFill('green')
+                rect.draw(win)
+        p = win.getMouse()
+        px = math.floor(p.getX())
+        py = math.floor(p.getY())
+        if px == 0 and py == 14:
+            initial_condition = False
+            win.close()
+        else:
+            toggle(grid_state,px,py)
+            win.close()
+    return grid_state
+initial_conditions()
+# %%
+#part 10
+def find_neighbors(grid_state,row,column):
+    sum_of_neighbors = 0
+    if row == 0:
+        if column == 0:
+            sum_of_neighbors = grid_state[row+1][column] + grid_state[row+1][column+1] + grid_state[row][column+1] 
+        elif column == 14:
+            sum_of_neighbors = grid_state[row+1][column] + grid_state[row+1][column-1] + grid_state[row][column-1] 
+        else:
+            sum_of_neighbors += grid_state[row][column-1]
+            sum_of_neighbors += grid_state[row][column+1]
+            sum_of_neighbors += grid_state[row+1][column-1]
+            sum_of_neighbors += grid_state[row+1][column]
+            sum_of_neighbors += grid_state[row+1][column+1]
+    elif row == 14:
+        if column == 0:
+            sum_of_neighbors = grid_state[row-1][column] + grid_state[row-1][column+1] + grid_state[row][column+1] 
+        elif column == 14:
+            sum_of_neighbors = grid_state[row-1][column] + grid_state[row-1][column-1] + grid_state[row][column-1] 
+        else:
+            sum_of_neighbors += grid_state[row][column-1]
+            sum_of_neighbors += grid_state[row][column+1]
+            sum_of_neighbors += grid_state[row-1][column-1]
+            sum_of_neighbors += grid_state[row-1][column]
+            sum_of_neighbors += grid_state[row-1][column+1]
+    elif column == 0:
+        sum_of_neighbors += grid_state[row-1][column]
+        sum_of_neighbors += grid_state[row+1][column]
+        sum_of_neighbors += grid_state[row-1][column+1]
+        sum_of_neighbors += grid_state[row][column+1]
+        sum_of_neighbors += grid_state[row+1][column+1]
+    elif column == 14:
+        sum_of_neighbors += grid_state[row-1][column]
+        sum_of_neighbors += grid_state[row+1][column]
+        sum_of_neighbors += grid_state[row-1][column-1]
+        sum_of_neighbors += grid_state[row][column-1]
+        sum_of_neighbors += grid_state[row+1][column-1]
+    else:
+        sum_of_neighbors += grid_state[row-1][column-1]
+        sum_of_neighbors += grid_state[row][column-1]
+        sum_of_neighbors += grid_state[row+1][column-1]
 
-row = []
-interactive_matrix = []
-for i in range(15):
-    row.append(0)
-for i in range(15):
-    interactive_matrix.append(row)
-win = GraphWin("2D ConwaysGameOfLife",700,700)
-win.setCoords(0,0,15,15)
-#draw the horizontal lines
-for i in range(len(interactive_matrix)):
-    for j in range(len(interactive_matrix[i])):
-        rect = Rectangle(Point(i,j),Point(i+1,j+1))
-        if interactive_matrix[i][j] == 1:
-            rect.fill('blue')
-        rect.draw(win)
-p = win.getMouse()
-def toggle
-if p.getX() < 400:
-    win.close()
+        sum_of_neighbors += grid_state[row-1][column]
+        sum_of_neighbors += grid_state[row+1][column]
+
+        sum_of_neighbors += grid_state[row-1][column+1]
+        sum_of_neighbors += grid_state[row][column+1]
+        sum_of_neighbors += grid_state[row+1][column+1]
+    return sum_of_neighbors
+
+def iterate(grid_state):
+    for i in range(len(grid_state)):
+        for j in range(len(grid_state)):
+            if grid_state[i][j] == 1:
+                if find_neighbors(grid_state,i,j) < 2 or find_neighbors(grid_state,i,j) > 3:
+                    grid_state = toggle(grid_state,i,j)
+            else:
+                if find_neighbors(grid_state,i,j) != 3:
+                    grid_state = toggle(grid_state,i,j)
+    return grid_state
+
+# %%
+#Part 11
+
 # %%
