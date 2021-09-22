@@ -231,6 +231,60 @@ def iterate(grid_state):
 iterate(grid_state = grid_state)
 # %%
 # Question 11
+def update_grid(iteration, next_state, active_color = "gray", dormant_color = "white"):
+    draw_matrix(next_state, iteration, active_color, dormant_color)
+    iteration += 1
+    return iteration
+
+def draw_matrix(grid_state,iteration,active_color,dormant_color):
+    win = GraphWin(f"{iteration} iterations",700,700)
+    win.setCoords(0,0,15,15)
+    #draw the horizontal lines
+    for i in range(len(grid_state)):
+        for j in range(len(grid_state[i])):
+            rect = Rectangle(Point(i,j),Point(i+1,j+1))
+            if grid_state[i][j] == 1:
+                rect.setFill(active_color)
+            else:
+                rect.setFill(dormant_color)
+            rect.draw(win)
+    p = win.getMouse()
+    if p.getX() < 400:
+        win.close()
+
+
+grid_state = initial_conditions()
+condition = True
+iteration_num = 1
+while condition == True:
+   iteration_num =  update_grid(iteration_num,grid_state)
+   grid_state = iterate(grid_state)
+
 
 # %%
 # Question 12
+
+def draw_matrix(grid_state,iteration,active_color,dormant_color):
+    win = GraphWin(f"{iteration} iterations",700,700)
+    win.setCoords(0,0,15,15)
+    #draw the horizontal lines
+    for i in range(len(grid_state)):
+        for j in range(len(grid_state[i])):
+            rect = Rectangle(Point(i,j),Point(i+1,j+1))
+            if grid_state[i][j] == 1:
+                rect.setFill(active_color)
+            else:
+                rect.setFill(dormant_color)
+            rect.draw(win)
+    win.close()
+
+grid_state = initial_conditions()
+condition = True
+iteration_num = 1
+while condition == True:
+   iteration_num =  update_grid(iteration_num,grid_state)
+   grid_state = iterate(grid_state)
+   keyEnter = win.checkKey()
+   if keyEnter != "":
+       win.close()
+       condition = False
