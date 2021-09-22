@@ -20,26 +20,22 @@ def identify_rules(input_number):
 def next_state(previous_state, rules_dictionary):
     possible_states = [[1,1,1],[1,1,0],[1,0,1],[1,0,0],[0,1,1],[0,1,0],[0,0,1],[0,0,0]]
     threes_previous = []
-    #two initial states
-    threes_previous.append([0,0,previous_state[0]])
-    threes_previous.append([0,previous_state[0],previous_state[1]])
-    #for loop to iterate through the bulk of the outputs
+    previous_state.insert(0,0)
+    previous_state.insert(0,0)
+    previous_state.append(0)
+    previous_state.append(0)
     for i in range(len(previous_state)-2):
         threes_previous.append([previous_state[i],previous_state[i+1],previous_state[i+2]])
-    #two final states
-    threes_previous.append([previous_state[-2],previous_state[-1],0])
-    threes_previous.append([previous_state[-1],0,0])
     NextState = []
     #index each set of three then add the according rule
     for i in range(len(threes_previous)):
         rule_index = possible_states.index(threes_previous[i])
         NextState.append(rules_dictionary[rule_index])
     return NextState
-#next_state(previous_state = [1,1,0,0,1], rules_dictionary = identify_rules(175))
+next_state(previous_state = [1], rules_dictionary = identify_rules(175))
 
 # %%
 #part 3
-#fix this
 def initial_condition(iterations):
     if type(iterations) != int:
         return 'Error, please enter an integer number of iterations'
@@ -67,10 +63,19 @@ def initial_condition(iterations):
 #Part 4
 def one_dimension(iterations, rules_library):
     framework_with_impulse = initial_condition(iterations)
-    for i in range(len(framework_with_impulse)-1):
-        framework_with_impulse[i+1] = next_state(framework_with_impulse[i],rules_library)[1:-1]
+    impulse = [1]
+    for i in range(iterations+1):
+        temporary_row = []
+        for j in range(iterations-i):
+            temporary_row.append(0)
+        for j in range(len(impulse)):
+            temporary_row.append(impulse[j])
+        for k in range(iterations-i):
+            temporary_row.append(0)
+        framework_with_impulse[i] = temporary_row
+        impulse = next_state(impulse,rules_library)
     return framework_with_impulse
-one_dimension(iterations = 4, rules_library = identify_rules(174))
+one_dimension(iterations = 3, rules_library = identify_rules(175))
 
 
 # %%
@@ -82,18 +87,14 @@ def visual_one_dimension(iterations, rules_library):
     one_dimension_matrix = one_dimension(iterations, rules_library)
     for i in range(len(one_dimension_matrix)):
         for j in range(len(one_dimension_matrix[i])):
-            lower_left_x = j
-            lower_left_y = iterations - (i)
-            upper_right_x = (j+1)
-            upper_right_y = iterations - (i-1)
-            rect = Rectangle(Point(lower_left_x,lower_left_y),Point(upper_right_x,upper_right_y))
+            rect = Rectangle(Point(j,iterations - (i)),Point(j+1,iterations - (i-1)))
             if one_dimension_matrix[i][j] == 1:
                 rect.setFill('blue')
             rect.draw(win)
     p = win.getMouse()
     if p.getX() < 400:
         win.close()
-visual_one_dimension(iterations = 50, rules_library = identify_rules(174))
+visual_one_dimension(iterations = 50, rules_library = identify_rules(175))
 
 # %%
 #Part 6
@@ -146,6 +147,7 @@ for i in range(len(interactive_matrix)):
             rect.fill('blue')
         rect.draw(win)
 p = win.getMouse()
+def toggle
 if p.getX() < 400:
     win.close()
 # %%
